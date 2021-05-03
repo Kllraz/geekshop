@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django import forms
 from authapp.models import User
+from authapp.validators import minNameLength
 
 
 class LoginForm(AuthenticationForm):
@@ -23,7 +24,7 @@ class RegisterForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control py-4',
         'placeholder': 'Введите имя пользователя'
-    }))
+    }), validators=[minNameLength])
     email = forms.CharField(widget=forms.EmailInput(attrs={
         'class': 'form-control py-4',
         'placeholder': 'Введите адрес эл. почты'
@@ -31,11 +32,11 @@ class RegisterForm(UserCreationForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control py-4',
         'placeholder': 'Введите имя'
-    }))
+    }), validators=[minNameLength])
     last_name = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control py-4',
         'placeholder': 'Введите фамилию'
-    }))
+    }), validators=[minNameLength])
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control py-4',
         'placeholder': 'Введите пароль'
