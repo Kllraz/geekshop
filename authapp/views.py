@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from authapp.forms import LoginForm, RegisterForm
+from authapp.forms import LoginForm, RegisterForm, EditForm
 from django.contrib import auth, messages
 
 
@@ -46,3 +46,18 @@ def logout(request):
     auth.logout(request)
 
     return redirect('index')
+
+
+def profile(request):
+    if request.method == 'POST':
+        form = EditForm(data=request.POST, instance=request.user, files=request.FILES)
+        if form.is_valid():
+            form.save()
+    else:
+        form = EditForm(instance=request.user)
+    context = {
+        'title': 'GeekShop - Профиль',
+        'form': form,
+    }
+
+    return render(request, 'authapp/profile.html', context)
