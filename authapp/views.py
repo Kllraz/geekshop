@@ -54,6 +54,7 @@ def profile(request):
         form = EditForm(data=request.POST, instance=request.user, files=request.FILES)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Данные сохранены')
     else:
         form = EditForm(instance=request.user)
 
