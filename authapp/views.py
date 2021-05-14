@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from authapp.forms import LoginForm, RegisterForm, EditForm
 from django.contrib import auth, messages
+from basketapp.models import Basket
 
 
 # Create your views here.
@@ -55,9 +56,11 @@ def profile(request):
             form.save()
     else:
         form = EditForm(instance=request.user)
+
     context = {
         'title': 'GeekShop - Профиль',
         'form': form,
+        'baskets': Basket.objects.filter(user=request.user)
     }
 
     return render(request, 'authapp/profile.html', context)
