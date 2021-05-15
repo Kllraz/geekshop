@@ -10,7 +10,7 @@ from django.http import JsonResponse
 
 @login_required
 def add_product(request, product_id=None):
-    if request.method == 'POST':
+    if request.is_ajax():
         product = Product.objects.get(id=product_id)
         baskets = Basket.objects.filter(user=request.user, product=product)
 
@@ -21,15 +21,20 @@ def add_product(request, product_id=None):
         else:
             Basket.objects.create(user=request.user, product=product, quantity=1)
 
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return JsonResponse({'status': True})
 
 
 @login_required
 def remove_product(request, basket_id=None):
-    if request.method == 'POST':
+    if request.is_ajax():
         Basket.objects.get(id=basket_id).delete()
 
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        baskets = Basket.objects.filter(user=request.user)
+        context = {'baskets': baskets}
+        result = render_to_string('basketapp/basket.html', context)
+
+        return JsonResponse({'result': result})
+
 
 @login_required
 def edit(request, basket_id=None, quantity=None):

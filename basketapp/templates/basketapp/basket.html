@@ -22,12 +22,7 @@
                             </div>
                             <div class="col-lg-4">{{ basket.sum }} руб.</div>
                             <div class="col-lg-4">
-                                <form action="{% url 'basket:remove_product' basket.id %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-success">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                <i class="fas fa-trash remove-product" data-id="{{ basket.id }}"></i>
                             </div>
                         </div>
                     </li>
