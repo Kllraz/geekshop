@@ -57,6 +57,16 @@ def delete_user(request, user_id):
     return redirect('admin-staff:users')
 
 
+def activate_user(request, user_id):
+    user = User.objects.get(id=user_id)
+    user.is_active = True
+    user.save()
+
+    messages.success(request, 'Пользователь активирован')
+
+    return redirect('admin-staff:users')
+
+
 def users(request):
     context = {
         'users': User.objects.all()
