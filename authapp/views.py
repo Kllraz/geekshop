@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from authapp.forms import LoginForm, RegisterForm
-from django.contrib import auth
+from authapp.forms import LoginForm, RegisterForm, EditForm
+from django.contrib import auth, messages
+from basketapp.models import Basket
 
 
 # Create your views here.
@@ -16,7 +17,8 @@ def login(request):
             if user and user.is_active:
                 auth.login(request, user)
                 return redirect('index')
-    form = LoginForm()
+    else:
+        form = LoginForm()
 
     context = {
         'title': 'GeekShop - Авторизация',
@@ -30,8 +32,10 @@ def register(request):
         form = RegisterForm(data=request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Вы успешно зарегистрировались')
             return redirect('auth:login')
-    form = RegisterForm()
+    else:
+        form = RegisterForm()
     context = {
         'title': 'GeekShop - Регистрация',
         'form': form,
@@ -43,3 +47,21 @@ def logout(request):
     auth.logout(request)
 
     return redirect('index')
+
+
+def profile(request):
+    if request.method == 'POST':
+        form = EditForm(data=request.POST, instance=request.user, files=request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Данные сохранены')
+    else:
+        form = EditForm(instance=request.user)
+
+    context = {
+        'title': 'GeekShop - Профиль',
+        'form': form,
+        'baskets': Basket.objects.filter(user=request.user)
+    }
+
+    return render(request, 'authapp/profile.html', context)
