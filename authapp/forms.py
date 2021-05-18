@@ -68,7 +68,7 @@ class EditForm(UserChangeForm):
     }), validators=[minNameLength])
     avatar = forms.ImageField(widget=forms.FileInput(attrs={
         'class': 'custom-file-input',
-    }))
+    }), required=False)
 
     class Meta:
         model = User
