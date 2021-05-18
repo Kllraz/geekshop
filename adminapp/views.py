@@ -4,14 +4,17 @@ from django.contrib import messages
 
 from authapp.models import User
 from adminapp.forms import AdminUserCreationForm, AdminUserEditForm
+from django.contrib.auth.decorators import user_passes_test
 
 
 # Create your views here.
 
+@user_passes_test(lambda u: u.is_superuser)
 def index(request):
     return render(request, 'adminapp/admin.html')
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def create_user(request):
     if request.method == 'POST':
         form = AdminUserCreationForm(data=request.POST, files=request.FILES)
@@ -27,6 +30,7 @@ def create_user(request):
     return render(request, 'adminapp/admin-users-create.html', context)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def change_user(request, user_id):
     user = User.objects.get(id=user_id)
     if request.method == 'POST':
@@ -47,6 +51,7 @@ def change_user(request, user_id):
     return render(request, 'adminapp/admin-users-update-delete.html', context)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def delete_user(request, user_id):
     user = User.objects.get(id=user_id)
     user.is_active = False
@@ -57,6 +62,7 @@ def delete_user(request, user_id):
     return redirect('admin-staff:users')
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def activate_user(request, user_id):
     user = User.objects.get(id=user_id)
     user.is_active = True
@@ -67,6 +73,7 @@ def activate_user(request, user_id):
     return redirect('admin-staff:users')
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def users(request):
     context = {
         'users': User.objects.all()
