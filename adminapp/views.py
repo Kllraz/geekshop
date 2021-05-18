@@ -1,5 +1,7 @@
 from django.shortcuts import render
 
+from authapp.models import User
+
 
 # Create your views here.
 
@@ -16,4 +18,7 @@ def change_user(request, user_id):
 
 
 def users(request):
-    return render(request, 'adminapp/admin-users-read.html')
+    context = {
+        'users': User.objects.all()
+    }
+    return render(request, 'adminapp/admin-users-read.html', context)
