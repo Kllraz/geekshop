@@ -1,7 +1,8 @@
 from django.urls import path
 
 from adminapp.views import index, create_user, change_user, users, delete_user, activate_user, products, change_product, \
-    delete_product, create_product, product_categories, create_product_category
+    delete_product, create_product, product_categories, create_product_category, change_product_category, \
+    delete_product_category
 
 app_name = 'authapp'
 
@@ -20,6 +21,6 @@ urlpatterns = [
 
     path('product-categories/', product_categories, name='product_categories'),
     path('product-category-create/', create_product_category, name='create_product_category'),
-    path('change-product/<int:product_id>/', change_product, name='change_product_category'),
-    # path('product-delete/<int:product_id>/', delete_product, name='delete_product'),
+    path('change-product-category/<int:product_category_id>/', change_product_category, name='change_product_category'),
+    path('product-category-delete/<int:product_category_id>/', delete_product_category, name='delete_product_category'),
 ]

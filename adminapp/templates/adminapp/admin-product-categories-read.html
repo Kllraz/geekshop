@@ -38,7 +38,7 @@
                     {% for category in categories %}
                         <tr>
                             <td>
-                                <a href="{% url 'admin-staff:change_product' category.id %}" style="color: dodgerblue">
+                                <a href="{% url 'admin-staff:change_product_category' category.id %}" style="color: dodgerblue">
                                     {{ category.name }}
                                 </a>
                             </td>

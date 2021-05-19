@@ -139,6 +139,7 @@ def delete_product(request, product_id):
     return redirect('admin-staff:products')
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def product_categories(request):
     context = {
         'categories': ProductCategory.objects.all()
@@ -149,7 +150,7 @@ def product_categories(request):
 @user_passes_test(lambda u: u.is_superuser)
 def create_product_category(request):
     if request.method == 'POST':
-        form = AdminCreateProductCategoryForm(data=request.POST, files=request.FILES)
+        form = AdminCreateProductCategoryForm(data=request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Категория создана')
@@ -160,3 +161,34 @@ def create_product_category(request):
         'form': form,
     }
     return render(request, 'adminapp/admin-product-category-create.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def change_product_category(request, product_category_id):
+    product_category = ProductCategory.objects.get(id=product_category_id)
+    if request.method == 'POST':
+        form = AdminEditProductCategoryForm(data=request.POST, instance=product_category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Данные сохранены')
+
+            return redirect('admin-staff:product_categories')
+    else:
+        form = AdminEditProductCategoryForm(instance=product_category)
+
+    context = {
+        'current_category': product_category,
+        'form': form,
+    }
+
+    return render(request, 'adminapp/admin-product-category-update-delete.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def delete_product_category(request, product_category_id):
+    product_category = ProductCategory.objects.get(id=product_category_id)
+    product_category.delete()
+
+    messages.success(request, f'Категория "{product_category.name}" удалена')
+
+    return redirect('admin-staff:product_categories')
