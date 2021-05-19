@@ -82,6 +82,7 @@ def users(request):
     return render(request, 'adminapp/admin-users-read.html', context)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def products(request):
     context = {
         'products': Product.objects.all()
@@ -90,6 +91,7 @@ def products(request):
     return render(request, 'adminapp/admin-products-read.html', context)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def change_product(request, product_id):
     product = Product.objects.get(id=product_id)
     if request.method == 'POST':
@@ -110,6 +112,7 @@ def change_product(request, product_id):
     return render(request, 'adminapp/admin-products-update-delete.html', context)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def delete_product(request, product_id):
     product = Product.objects.get(id=product_id)
     product.delete()
