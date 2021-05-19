@@ -11,7 +11,7 @@ from mainapp.models import Product, ProductCategory
 
 # Create your views here.
 
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Менеджер').exists())
 def index(request):
     return render(request, 'adminapp/admin.html')
 
@@ -75,7 +75,7 @@ def activate_user(request, user_id):
     return redirect('admin-staff:users')
 
 
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Менеджер').exists())
 def users(request):
     context = {
         'users': User.objects.all()
@@ -83,7 +83,7 @@ def users(request):
     return render(request, 'adminapp/admin-users-read.html', context)
 
 
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Менеджер').exists())
 def products(request):
     context = {
         'products': Product.objects.all()
@@ -139,7 +139,7 @@ def delete_product(request, product_id):
     return redirect('admin-staff:products')
 
 
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Менеджер').exists())
 def product_categories(request):
     context = {
         'categories': ProductCategory.objects.all()
