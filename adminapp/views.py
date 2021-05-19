@@ -4,7 +4,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 
 from authapp.models import User
-from adminapp.forms import AdminUserCreationForm, AdminUserEditForm, AdminProductEditForm, AdminCreateProductForm
+from adminapp.forms import AdminUserCreationForm, AdminUserEditForm, AdminProductEditForm, AdminCreateProductForm, \
+    AdminCreateProductCategoryForm, AdminEditProductCategoryForm
 from mainapp.models import Product, ProductCategory
 
 
@@ -143,3 +144,19 @@ def product_categories(request):
         'categories': ProductCategory.objects.all()
     }
     return render(request, 'adminapp/admin-product-categories-read.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def create_product_category(request):
+    if request.method == 'POST':
+        form = AdminCreateProductCategoryForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Категория создана')
+            return redirect('admin-staff:product_categories')
+    else:
+        form = AdminCreateProductCategoryForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'adminapp/admin-product-category-create.html', context)

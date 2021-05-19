@@ -82,3 +82,31 @@ class AdminCreateProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ('name', 'description', 'price', 'quantity', 'category', 'image')
+
+
+class AdminCreateProductCategoryForm(forms.ModelForm):
+    name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4',
+        'placeholder': 'Введите название'
+    }))
+    description = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4',
+        'placeholder': 'Введите описание'
+    }))
+
+    class Meta:
+        model = ProductCategory
+        fields = ('name', 'description')
+
+
+class AdminEditProductCategoryForm(forms.ModelForm):
+    name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4'
+    }))
+    description = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4'
+    }))
+
+    class Meta:
+        model = ProductCategory
+        fields = ('name', 'description')
