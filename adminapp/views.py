@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import user_passes_test
 
 from authapp.models import User
 from adminapp.forms import AdminUserCreationForm, AdminUserEditForm, AdminProductEditForm
-from mainapp.models import Product
+from mainapp.models import Product, ProductCategory
 
 
 # Create your views here.
@@ -120,3 +120,10 @@ def delete_product(request, product_id):
     messages.success(request, f'Продукт "{product.name}" удален')
 
     return redirect('admin-staff:products')
+
+
+def product_categories(request):
+    context = {
+        'categories': ProductCategory.objects.all()
+    }
+    return render(request, 'adminapp/admin-product-categories-read.html', context)
