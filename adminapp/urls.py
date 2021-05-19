@@ -1,7 +1,7 @@
 from django.urls import path
 
 from adminapp.views import index, create_user, change_user, users, delete_user, activate_user, products, change_product, \
-    delete_product, product_categories
+    delete_product, create_product, product_categories
 
 app_name = 'authapp'
 
@@ -14,6 +14,7 @@ urlpatterns = [
     path('user-activate/<int:user_id>/', activate_user, name='activate_user'),
 
     path('products/', products, name='products'),
+    path('product-create/', create_product, name='create_product'),
     path('change-product/<int:product_id>/', change_product, name='change_product'),
     path('product-delete/<int:product_id>/', delete_product, name='delete_product'),
 

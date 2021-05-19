@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 
 from authapp.models import User
-from adminapp.forms import AdminUserCreationForm, AdminUserEditForm, AdminProductEditForm
+from adminapp.forms import AdminUserCreationForm, AdminUserEditForm, AdminProductEditForm, AdminCreateProductForm
 from mainapp.models import Product, ProductCategory
 
 
@@ -89,6 +89,22 @@ def products(request):
     }
 
     return render(request, 'adminapp/admin-products-read.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def create_product(request):
+    if request.method == 'POST':
+        form = AdminCreateProductForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Продукт создан')
+            return redirect('admin-staff:products')
+    else:
+        form = AdminCreateProductForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'adminapp/admin-products-create.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser)

@@ -33,9 +33,43 @@ class AdminProductEditForm(forms.ModelForm):
     }))
     price = forms.IntegerField(widget=forms.NumberInput(attrs={
         'class': 'form-control py-4',
+        'min': 0
     }))
     quantity = forms.IntegerField(widget=forms.NumberInput(attrs={
         'class': 'form-control py-4',
+        'min': 0
+    }, ))
+    category = forms.ModelChoiceField(queryset=ProductCategory.objects.all(),
+                                      widget=forms.Select(attrs={
+                                          'class': 'form-select',
+                                      }))
+    image = forms.ImageField(widget=forms.FileInput(attrs={
+        'class': 'custom-file-input',
+    }), required=False)
+
+    class Meta:
+        model = Product
+        fields = ('name', 'description', 'price', 'quantity', 'category', 'image')
+
+
+class AdminCreateProductForm(forms.ModelForm):
+    name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4',
+        'placeholder': 'Введите название'
+    }))
+    description = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4',
+        'placeholder': 'Введите описание'
+    }))
+    price = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'class': 'form-control py-4',
+        'placeholder': 'Введите цену',
+        'min': 0
+    }))
+    quantity = forms.IntegerField(widget=forms.NumberInput(attrs={
+        'class': 'form-control py-4',
+        'placeholder': 'Введите количество',
+        'min': 0
     }, ))
     category = forms.ModelChoiceField(queryset=ProductCategory.objects.all(),
                                       widget=forms.Select(attrs={
