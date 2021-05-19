@@ -58,7 +58,7 @@ def delete_user(request, user_id):
     user.is_active = False
     user.save()
 
-    messages.success(request, 'Пользователь удален')
+    messages.success(request, f'Пользователь "{user.username}" удален')
 
     return redirect('admin-staff:users')
 
@@ -69,7 +69,7 @@ def activate_user(request, user_id):
     user.is_active = True
     user.save()
 
-    messages.success(request, 'Пользователь активирован')
+    messages.success(request, f'Пользователь "{user.username}" активирован')
 
     return redirect('admin-staff:users')
 
@@ -108,3 +108,12 @@ def change_product(request, product_id):
     }
 
     return render(request, 'adminapp/admin-products-update-delete.html', context)
+
+
+def delete_product(request, product_id):
+    product = Product.objects.get(id=product_id)
+    product.delete()
+
+    messages.success(request, f'Продукт "{product.name}" удален')
+
+    return redirect('admin-staff:products')
