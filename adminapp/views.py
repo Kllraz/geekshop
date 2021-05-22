@@ -3,6 +3,8 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 
+from django.views.generic.list import ListView
+
 from authapp.models import User
 from adminapp.forms import AdminUserCreationForm, AdminUserEditForm, AdminProductEditForm, AdminCreateProductForm, \
     AdminCreateProductCategoryForm, AdminEditProductCategoryForm
@@ -75,21 +77,16 @@ def activate_user(request, user_id):
     return redirect('admin-staff:users')
 
 
-@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Менеджер').exists())
-def users(request):
-    context = {
-        'users': User.objects.all()
-    }
-    return render(request, 'adminapp/admin-users-read.html', context)
+# @user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Менеджер').exists())
+class UsersListView(ListView):
+    model = User
+    template_name = 'adminapp/admin-users-read.html'
 
 
-@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Менеджер').exists())
-def products(request):
-    context = {
-        'products': Product.objects.all()
-    }
-
-    return render(request, 'adminapp/admin-products-read.html', context)
+# @user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Менеджер').exists())
+class ProductsListView(ListView):
+    model = Product
+    template_name = 'adminapp/admin-products-read.html'
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -139,12 +136,10 @@ def delete_product(request, product_id):
     return redirect('admin-staff:products')
 
 
-@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Менеджер').exists())
-def product_categories(request):
-    context = {
-        'categories': ProductCategory.objects.all()
-    }
-    return render(request, 'adminapp/admin-product-categories-read.html', context)
+# @user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Менеджер').exists())
+class ProductCategoriesListView(ListView):
+    model = ProductCategory
+    template_name = 'adminapp/admin-product-categories-read.html'
 
 
 @user_passes_test(lambda u: u.is_superuser)
