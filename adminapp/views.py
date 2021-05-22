@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from authapp.models import User
@@ -40,15 +40,20 @@ class UserUpdateView(SuccessMessageMixin, UpdateView):
     success_message = 'Данные сохранены'
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def delete_user(request, user_id):
-    user = User.objects.get(id=user_id)
-    user.is_active = False
-    user.save()
+class UserDeleteView(DeleteView):
+    model = User
+    template_name = 'adminapp/admin-users-update-delete.html'
+    success_url = reverse_lazy('admin-staff:users')
+    success_message = 'Пользователь удален'
 
-    messages.success(request, f'Пользователь "{user.username}" удален')
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.is_active = False
+        self.object.save()
+        messages.success(request, self.success_message)
 
-    return redirect('admin-staff:users')
+        return HttpResponseRedirect(success_url)
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -93,14 +98,16 @@ class ProductUpdateView(SuccessMessageMixin, UpdateView):
     success_message = 'Данные сохранены'
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def delete_product(request, product_id):
-    product = Product.objects.get(id=product_id)
-    product.delete()
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = 'adminapp/admin-product-category-update-delete.html'
+    success_url = reverse_lazy('admin-staff:products')
+    success_message = 'Продукт удален'
 
-    messages.success(request, f'Продукт "{product.name}" удален')
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, self.success_message)
 
-    return redirect('admin-staff:products')
+        return super(ProductDeleteView, self).delete(request, *args, **kwargs)
 
 
 # @user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Менеджер').exists())
@@ -126,11 +133,13 @@ class ProductCategoriesUpdateView(SuccessMessageMixin, UpdateView):
     success_message = 'Данные сохранены'
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def delete_product_category(request, product_category_id):
-    product_category = ProductCategory.objects.get(id=product_category_id)
-    product_category.delete()
+class ProductCategoryDeleteView(DeleteView):
+    model = ProductCategory
+    template_name = 'adminapp/admin-product-category-update-delete.html'
+    success_url = reverse_lazy('admin-staff:product_categories')
+    success_message = 'Категория удалена'
 
-    messages.success(request, f'Категория "{product_category.name}" удалена')
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, self.success_message)
 
-    return redirect('admin-staff:product_categories')
+        return super(ProductCategoryDeleteView, self).delete(request, *args, **kwargs)
