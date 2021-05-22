@@ -10,9 +10,9 @@
             </button>
         </div>
     {% endif %}
-    <h1 class="mt-4">Редактирование категории | {{ current_category.name }}</h1>
+    <h1 class="mt-4">Редактирование категории | {{ productcategory.name }}</h1>
     <div class="card-body">
-        <form action="{% url 'admin-staff:change_product_category' current_category.id %}" method="post">
+        <form action="{% url 'admin-staff:change_product_category' productcategory.id %}" method="post">
             {% csrf_token %}
             <div class="form-row">
                 <div class="col-lg-6">
@@ -36,7 +36,7 @@
         </form>
         <div class="row">
             <div class="col-lg-12" style="margin-top: 33px;">
-                <a href="{% url 'admin-staff:delete_product_category' current_category.id %}"
+                <a href="{% url 'admin-staff:delete_product_category' productcategory.id %}"
                    class="btn btn-danger btn-block">
                     Удалить
                 </a>

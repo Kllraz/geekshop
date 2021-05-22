@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import user_passes_test
 
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from authapp.models import User
@@ -31,25 +31,13 @@ class UserCreateView(SuccessMessageMixin, CreateView):
     success_message = 'Пользователь создан'
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def change_user(request, user_id):
-    user = User.objects.get(id=user_id)
-    if request.method == 'POST':
-        form = AdminUserEditForm(data=request.POST, instance=user, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Данные сохранены')
-
-            return redirect('admin-staff:users')
-    else:
-        form = AdminUserEditForm(instance=user)
-
-    context = {
-        'current_user': user,
-        'form': form,
-    }
-
-    return render(request, 'adminapp/admin-users-update-delete.html', context)
+# @user_passes_test(lambda u: u.is_superuser)
+class UserUpdateView(SuccessMessageMixin, UpdateView):
+    model = User
+    template_name = 'adminapp/admin-users-update-delete.html'
+    form_class = AdminUserEditForm
+    success_url = reverse_lazy('admin-staff:users')
+    success_message = 'Данные сохранены'
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -95,25 +83,14 @@ class ProductCreateView(SuccessMessageMixin, CreateView):
     success_message = 'Продукт создан'
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def change_product(request, product_id):
-    product = Product.objects.get(id=product_id)
-    if request.method == 'POST':
-        form = AdminProductEditForm(data=request.POST, instance=product, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Данные сохранены')
+# @user_passes_test(lambda u: u.is_superuser)
 
-            return redirect('admin-staff:products')
-    else:
-        form = AdminProductEditForm(instance=product)
-
-    context = {
-        'current_product': product,
-        'form': form,
-    }
-
-    return render(request, 'adminapp/admin-products-update-delete.html', context)
+class ProductUpdateView(SuccessMessageMixin, UpdateView):
+    model = Product
+    template_name = 'adminapp/admin-products-update-delete.html'
+    form_class = AdminProductEditForm
+    success_url = reverse_lazy("admin-staff:products")
+    success_message = 'Данные сохранены'
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -133,8 +110,6 @@ class ProductCategoriesListView(ListView):
 
 
 # @user_passes_test(lambda u: u.is_superuser)
-
-
 class ProductCategoriesCreateView(SuccessMessageMixin, CreateView):
     model = ProductCategory
     template_name = 'adminapp/admin-product-category-create.html'
@@ -143,25 +118,12 @@ class ProductCategoriesCreateView(SuccessMessageMixin, CreateView):
     success_message = 'Категория создана'
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def change_product_category(request, product_category_id):
-    product_category = ProductCategory.objects.get(id=product_category_id)
-    if request.method == 'POST':
-        form = AdminEditProductCategoryForm(data=request.POST, instance=product_category)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Данные сохранены')
-
-            return redirect('admin-staff:product_categories')
-    else:
-        form = AdminEditProductCategoryForm(instance=product_category)
-
-    context = {
-        'current_category': product_category,
-        'form': form,
-    }
-
-    return render(request, 'adminapp/admin-product-category-update-delete.html', context)
+class ProductCategoriesUpdateView(SuccessMessageMixin, UpdateView):
+    model = ProductCategory
+    template_name = 'adminapp/admin-product-category-update-delete.html'
+    form_class = AdminEditProductCategoryForm
+    success_url = reverse_lazy('admin-staff:product_categories')
+    success_message = 'Данные сохранены'
 
 
 @user_passes_test(lambda u: u.is_superuser)
