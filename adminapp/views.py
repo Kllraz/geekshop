@@ -3,7 +3,10 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 
+from django.urls import reverse_lazy
 from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView
+from django.contrib.messages.views import SuccessMessageMixin
 
 from authapp.models import User
 from adminapp.forms import AdminUserCreationForm, AdminUserEditForm, AdminProductEditForm, AdminCreateProductForm, \
@@ -18,20 +21,14 @@ def index(request):
     return render(request, 'adminapp/admin.html')
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def create_user(request):
-    if request.method == 'POST':
-        form = AdminUserCreationForm(data=request.POST, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Пользователь создан')
-            return redirect('admin-staff:users')
-    else:
-        form = AdminUserCreationForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'adminapp/admin-users-create.html', context)
+# @user_passes_test(lambda u: u.is_superuser)
+
+class UserCreateView(SuccessMessageMixin, CreateView):
+    model = User
+    template_name = 'adminapp/admin-users-create.html'
+    form_class = AdminUserCreationForm
+    success_url = reverse_lazy('admin-staff:users')
+    success_message = 'Пользователь создан'
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -89,20 +86,13 @@ class ProductsListView(ListView):
     template_name = 'adminapp/admin-products-read.html'
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def create_product(request):
-    if request.method == 'POST':
-        form = AdminCreateProductForm(data=request.POST, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Продукт создан')
-            return redirect('admin-staff:products')
-    else:
-        form = AdminCreateProductForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'adminapp/admin-products-create.html', context)
+# @user_passes_test(lambda u: u.is_superuser)
+class ProductCreateView(SuccessMessageMixin, CreateView):
+    model = Product
+    template_name = 'adminapp/admin-products-create.html'
+    form_class = AdminCreateProductForm
+    success_url = reverse_lazy('admin-staff:products')
+    success_message = 'Продукт создан'
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -142,20 +132,15 @@ class ProductCategoriesListView(ListView):
     template_name = 'adminapp/admin-product-categories-read.html'
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def create_product_category(request):
-    if request.method == 'POST':
-        form = AdminCreateProductCategoryForm(data=request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Категория создана')
-            return redirect('admin-staff:product_categories')
-    else:
-        form = AdminCreateProductCategoryForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'adminapp/admin-product-category-create.html', context)
+# @user_passes_test(lambda u: u.is_superuser)
+
+
+class ProductCategoriesCreateView(SuccessMessageMixin, CreateView):
+    model = ProductCategory
+    template_name = 'adminapp/admin-product-category-create.html'
+    form_class = AdminCreateProductCategoryForm
+    success_url = reverse_lazy('admin-staff:product_categories')
+    success_message = 'Категория создана'
 
 
 @user_passes_test(lambda u: u.is_superuser)
