@@ -132,3 +132,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 AUTH_USER_MODEL = 'authapp.user'
 
 LOGIN_URL = '/auth/login'
+LOGIN_REDIRECT_URL = '/auth/profile'
