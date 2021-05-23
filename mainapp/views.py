@@ -1,5 +1,5 @@
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
+from django.views.generic.list import ListView
 
 from mainapp.models import Product, ProductCategory
 
@@ -12,23 +12,25 @@ def index(request):
     return render(request, 'mainapp/index.html', context)
 
 
-def products(request, category_id=None):
-    context = {
-        'title': 'GeekShop - Каталог',
-        'products_categories': ProductCategory.objects.all(),
-    }
-    # UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list:
-    # <class 'mainapp.models.Product'> QuerySet.
-    all_products = Product.objects.filter(category_id=category_id).order_by(
-        'id') if category_id else Product.objects.all().order_by('id')
-    paginator = Paginator(all_products, per_page=3)
-    try:
-        paginator_products = paginator.page(request.GET.get('page'))
-    except PageNotAnInteger:
-        paginator_products = paginator.page(1)
-    except EmptyPage:
-        paginator_products = paginator.page(paginator.num_pages)
+class ProductsListView(ListView):
+    model = Product
+    template_name = 'mainapp/products.html'
+    paginate_by = 3
+    ordering = ('id',)
 
-    context.update({'products': paginator_products})
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ProductsListView, self).get_context_data(**kwargs)
 
-    return render(request, 'mainapp/products.html', context)
+        context.update({
+            'products_categories': ProductCategory.objects.all()
+        })
+
+        return context
+
+    def get_queryset(self):
+        queryset = super(ProductsListView, self).get_queryset()
+        queryset = queryset.filter(
+            category_id=self.kwargs.get('category_id')
+        ) if self.kwargs.get('category_id') else queryset
+
+        return queryset
