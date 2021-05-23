@@ -1,6 +1,5 @@
 from basketapp.models import Basket
 from mainapp.models import Product
-from django.shortcuts import HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse

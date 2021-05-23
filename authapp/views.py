@@ -2,6 +2,8 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from authapp.forms import LoginForm, RegisterForm, EditForm
 from authapp.models import User
@@ -50,6 +52,10 @@ class UserUpdateView(SuccessMessageMixin, UpdateView):
     form_class = EditForm
     success_url = reverse_lazy('auth:profile')
     success_message = 'Данные сохранены'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserUpdateView, self).dispatch(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         return self.request.user
