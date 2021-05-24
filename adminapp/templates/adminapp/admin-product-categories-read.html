@@ -35,7 +35,7 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    {% for category in categories %}
+                    {% for category in object_list %}
                         <tr>
                             <td>
                                 <a href="{% url 'admin-staff:change_product_category' category.id %}" style="color: dodgerblue">

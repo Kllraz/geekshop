@@ -43,7 +43,7 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    {% for product in products %}
+                    {% for product in object_list %}
                         <tr>
                             <td>
                                 <a href="{% url 'admin-staff:change_product' product.id %}" style="color: dodgerblue">
@@ -54,7 +54,12 @@
                             <td>{{ product.price }}</td>
                             <td>{{ product.quantity }}</td>
                             <td>{{ product.category.name }}</td>
-                            <td><img src="{{ product.image.url }}" alt="product-image" width="300" height="400"></td>
+                            <td>
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}"
+                                         alt="product-image" width="300" height="400">
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
