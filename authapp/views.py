@@ -3,11 +3,10 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy, reverse
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 
 from authapp.forms import LoginForm, RegisterForm, EditForm
 from authapp.models import User
-from basketapp.models import Basket
 
 from django.core.mail import send_mail
 from django.contrib import auth
@@ -15,8 +14,6 @@ from django.conf import settings
 from django.shortcuts import redirect
 
 from django.contrib import messages
-from django.http import HttpResponseRedirect
-
 import logging
 
 logger = logging.getLogger(__name__)
@@ -109,7 +106,6 @@ class UserUpdateView(SuccessMessageMixin, UpdateView):
         context = super(UserUpdateView, self).get_context_data(**kwargs)
         context.update({
             'title': 'GeekShop - Профиль',
-            'baskets': Basket.objects.filter(user=self.get_object())
         })
 
         return context
