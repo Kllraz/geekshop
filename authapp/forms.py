@@ -1,5 +1,9 @@
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
+import hashlib
+import random
+
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
+
 from authapp.models import User
 from authapp.validators import minNameLength
 
@@ -49,6 +53,18 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
+
+    def save(self, commit=True):
+        user = super(RegisterForm, self).save()
+        user.is_active = False
+
+        salt = hashlib.sha1(str(random.random()).encode('UTF-8')).hexdigest()[:6]
+        activation_code = hashlib.sha1((salt + user.email).encode('UTF-8')).hexdigest()
+
+        user.activation_key = activation_code
+        user.save()
+
+        return user
 
 
 class EditForm(UserChangeForm):

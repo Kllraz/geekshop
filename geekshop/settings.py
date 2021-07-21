@@ -134,7 +134,7 @@ AUTH_USER_MODEL = 'authapp.user'
 LOGIN_URL = '/auth/login'
 LOGIN_REDIRECT_URL = '/auth/profile'
 
-DOMAIN_NAME = 'http://localhost:8080'
+DOMAIN_NAME = 'http://127.0.0.1:8000'
 
 EMAIL_HOST = 'smtp.mailtrap.io'
 EMAIL_HOST_USER = 'ea7c69ad6dd888'
