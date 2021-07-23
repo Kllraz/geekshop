@@ -86,6 +86,11 @@ class EditForm(UserChangeForm):
         'class': 'custom-file-input',
     }), required=False)
 
+    birthday = forms.DateField(widget=forms.DateInput(attrs={
+        'class': 'form-control py-4',
+        'type': 'date'
+    }, format='%Y-%m-%d'))
+
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'avatar')
+        fields = ('username', 'email', 'first_name', 'last_name', 'avatar', 'birthday')
