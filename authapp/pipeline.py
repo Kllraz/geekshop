@@ -7,6 +7,10 @@ from social_core.exceptions import AuthForbidden
 
 from authapp.models import UserProfile
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def save_user_profile_vk(backend, user, response, *args, **kwargs):
     if backend.name != 'vk-oauth2':
@@ -33,8 +37,10 @@ def save_user_profile_vk(backend, user, response, *args, **kwargs):
         bdate = datetime.strptime(data['bdate'], '%d.%m.%Y').date()
         age = timezone.now().date().year - bdate.year
 
-        if age < 18:
+        if age < 100:
             user.delete()
+            logger.info(f'Пользователю {user.username} запрещена авторизация, '
+                        f'т.к. его возраст не соответствует требованиям')
             raise AuthForbidden('social_core.backends.vk.VKOAuth2')
 
         user.birthday = bdate
