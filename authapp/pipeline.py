@@ -37,7 +37,7 @@ def save_user_profile_vk(backend, user, response, *args, **kwargs):
         bdate = datetime.strptime(data['bdate'], '%d.%m.%Y').date()
         age = timezone.now().date().year - bdate.year
 
-        if age < 100:
+        if age < 18:
             user.delete()
             logger.info(f'Пользователю {user.username} запрещена авторизация, '
                         f'т.к. его возраст не соответствует требованиям')
@@ -50,5 +50,47 @@ def save_user_profile_vk(backend, user, response, *args, **kwargs):
 
     if data['about']:
         user.userprofile.about_me = data['about']
+
+    user.save()
+
+
+def save_user_profile_google(backend, user, response, *args, **kwargs):
+    if backend.name != 'google-oauth2':
+        return
+
+    api_url = urlunparse(('https',
+                          'people.googleapis.com',
+                          f'/v1/people/{response["sub"]}',
+                          None,
+                          urlencode({'personFields': ','.join(('birthdays', 'biographies', 'genders'))}),
+                          None
+                          ))
+
+    resp = requests.get(api_url, headers={
+        'Authorization': f'Bearer {response["access_token"]}'
+    })
+
+    if resp.status_code != 200:
+        return
+
+    data = resp.json()
+
+    if data['birthdays']:
+        bdate = data['birthdays'][0]['date']
+        bdate = datetime(day=bdate['day'], month=bdate['month'], year=bdate['year'])
+        age = timezone.now().date().year - bdate.year
+
+        if age < 18:
+            user.delete()
+            logger.info(f'Пользователю {user.username} запрещена авторизация, '
+                        f'т.к. его возраст не соответствует требованиям')
+            raise AuthForbidden('social_core.backends.vk.VKOAuth2')
+
+        user.birthday = bdate
+
+    if data['genders']:
+        gender = data['genders'][0]['value']
+
+        user.userprofile.gender = UserProfile.MALE if gender == 'male' else UserProfile.FEMALE
 
     user.save()
