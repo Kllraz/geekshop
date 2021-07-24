@@ -94,3 +94,28 @@ def save_user_profile_google(backend, user, response, *args, **kwargs):
         user.userprofile.gender = UserProfile.MALE if gender == 'male' else UserProfile.FEMALE
 
     user.save()
+
+
+def save_user_profile_yandex(backend, user, response, *args, **kwargs):
+    if backend.name != 'yandex-oauth2':
+        return
+
+    if response['birthday']:
+        bdate = datetime.strptime(response['birthday'], '%Y-%m-%d')
+        age = timezone.now().date().year - bdate.year
+
+        if age < 18:
+            user.delete()
+            logger.info(f'Пользователю {user.username} запрещена авторизация, '
+                        f'т.к. его возраст не соответствует требованиям')
+            raise AuthForbidden('social_core.backends.vk.VKOAuth2')
+
+        user.birthday = bdate
+
+    if response['sex']:
+        user.userprofile.gender = UserProfile.MALE if response['sex'] == 'male' else UserProfile.FEMALE
+
+    if response['login']:
+        user.username = response['login']
+
+    user.save()
