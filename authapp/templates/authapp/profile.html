@@ -17,7 +17,7 @@
                                 {% endif %}"
                          class="img-thumbnail">
                 </div>
-                {% if messages or form.errors %}
+                {% if messages or editform.errors or profileeditform.errors %}
                     <div class="alert {% if messages %} alert-success {% else %}
             alert-warning {% endif %} alert-dismissible fade show"
                          role="alert"
@@ -27,7 +27,8 @@
                                 {{ message }}
                             {% endfor %}
                         {% else %}
-                            {{ form.errors | escape }}
+                            {{ editform.errors | escape }}
+                            {{ profileeditform.errors | escape }}
                         {% endif %}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -39,41 +40,55 @@
                     <div class="form-row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="small mb-1" for="{{ form.first_name.id_for_label }}">Имя</label>
-                                {{ form.first_name }}
+                                <label class="small mb-1" for="{{ editform.first_name.id_for_label }}">Имя</label>
+                                {{ editform.first_name }}
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="small mb-1" for="{{ form.last_name.id_for_label }}">Фамилия</label>
-                                {{ form.last_name }}
+                                <label class="small mb-1" for="{{ editform.last_name.id_for_label }}">Фамилия</label>
+                                {{ editform.last_name }}
                             </div>
                         </div>
                     </div>
                     <div class="form-row mb-2">
                         <div class="col-lg-12">
                             <div class="custom-file">
-                                {{ form.avatar }}
-                                <label class="custom-file-label" for="{{ form.avatar.id_for_label }}">
+                                {{ editform.avatar }}
+                                <label class="custom-file-label" for="{{ editform.avatar.id_for_label }}">
                                     Выберите изображение</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-lg-6">
-                            <label class="small mb-1" for="{{ form.birthday.id_for_label }}">Дата рождения</label>
-                            {{ form.birthday }}
+                            <label class="small mb-1" for="{{ editform.birthday.id_for_label }}">Дата рождения</label>
+                            {{ editform.birthday }}
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ profileeditform.gender.id_for_label }}">Пол</label>
+                            {{ profileeditform.gender }}
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-lg-6">
-                            <label class="small mb-1" for="{{ form.username.id_for_label }}">Имя пользователя</label>
-                            {{ form.username }}
+                            <label class="small mb-1" for="{{ profileeditform.about_me.id_for_label }}">Обо мне</label>
+                            {{ profileeditform.about_me }}
                         </div>
                         <div class="col-lg-6">
-                            <label class="small mb-1" for="{{ form.email.id_for_label }}">Адрес электронной
+                            <label class="small mb-1" for="{{ profileeditform.tagline.id_for_label }}">Тэги</label>
+                            {{ profileeditform.tagline }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ editform.username.id_for_label }}">Имя пользователя</label>
+                            {{ editform.username }}
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ editform.email.id_for_label }}">Адрес электронной
                                 почты</label>
-                            {{ form.email }}
+                            {{ editform.email }}
                         </div>
                     </div>
                     <div class="form-row">

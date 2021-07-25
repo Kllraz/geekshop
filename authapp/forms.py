@@ -4,7 +4,7 @@ import random
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 
-from authapp.models import User
+from authapp.models import User, UserProfile
 from authapp.validators import minNameLength
 
 
@@ -94,3 +94,22 @@ class EditForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'first_name', 'last_name', 'avatar', 'birthday')
+
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('tagline', 'gender', 'about_me')
+
+    tagline = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4',
+    }), required=False)
+
+    about_me = forms.CharField(widget=forms.Textarea(attrs={
+        'class': 'form-control py-4',
+    }), required=False)
+
+    gender = forms.CharField(max_length=2, widget=forms.Select(choices=UserProfile.GENDER_CHOICE,
+                                                               attrs={
+                                                                   'class': 'form-control',
+                                                               }))

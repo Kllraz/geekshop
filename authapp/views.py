@@ -1,12 +1,14 @@
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy, reverse
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
-from authapp.forms import LoginForm, RegisterForm, EditForm
+from authapp.forms import LoginForm, RegisterForm, EditForm, ProfileEditForm
 from authapp.models import User
+
+from shapeshifter.views import MultiModelFormView
 
 from django.core.mail import send_mail
 from django.contrib import auth
@@ -88,10 +90,9 @@ class UserLogout(LogoutView):
     next_page = reverse_lazy('index')
 
 
-class UserUpdateView(SuccessMessageMixin, UpdateView):
-    model = User
+class UserUpdateView(MultiModelFormView):
     template_name = 'authapp/profile.html'
-    form_class = EditForm
+    form_classes = (EditForm, ProfileEditForm)
     success_url = reverse_lazy('auth:profile')
     success_message = 'Данные сохранены'
 
@@ -109,3 +110,20 @@ class UserUpdateView(SuccessMessageMixin, UpdateView):
         })
 
         return context
+
+    def get_instances(self):
+        object = self.get_object()
+        return {
+            'editform': object,
+            'profileeditform': object.userprofile
+        }
+
+    def forms_valid(self):
+        response = super(UserUpdateView, self).forms_valid()
+        success_message = self.get_success_message()
+        if success_message:
+            messages.success(self.request, success_message)
+        return response
+
+    def get_success_message(self):
+        return self.success_message
