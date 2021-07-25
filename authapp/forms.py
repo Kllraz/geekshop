@@ -107,6 +107,7 @@ class ProfileEditForm(forms.ModelForm):
 
     about_me = forms.CharField(widget=forms.Textarea(attrs={
         'class': 'form-control py-4',
+        'rows': 3,
     }), required=False)
 
     gender = forms.CharField(max_length=2, widget=forms.Select(choices=UserProfile.GENDER_CHOICE,
