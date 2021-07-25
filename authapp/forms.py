@@ -26,27 +26,27 @@ class LoginForm(AuthenticationForm):
 
 class RegisterForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
         'placeholder': 'Введите имя пользователя'
     }), validators=[minNameLength])
     email = forms.CharField(widget=forms.EmailInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
         'placeholder': 'Введите адрес эл. почты'
     }))
     first_name = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
         'placeholder': 'Введите имя'
     }), validators=[minNameLength])
     last_name = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
         'placeholder': 'Введите фамилию'
     }), validators=[minNameLength])
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
         'placeholder': 'Введите пароль'
     }))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
         'placeholder': 'Подтвердите пароль'
     }))
 
@@ -69,25 +69,25 @@ class RegisterForm(UserCreationForm):
 
 class EditForm(UserChangeForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
         'readOnly': True,
     }), validators=[minNameLength])
     email = forms.CharField(widget=forms.EmailInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
         'readOnly': True,
     }))
     first_name = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
     }), validators=[minNameLength])
     last_name = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
     }), validators=[minNameLength])
     avatar = forms.ImageField(widget=forms.FileInput(attrs={
         'class': 'custom-file-input',
     }), required=False)
 
     birthday = forms.DateField(widget=forms.DateInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
         'type': 'date'
     }, format='%Y-%m-%d'))
 
@@ -102,11 +102,11 @@ class ProfileEditForm(forms.ModelForm):
         fields = ('tagline', 'gender', 'about_me')
 
     tagline = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
     }), required=False)
 
     about_me = forms.CharField(widget=forms.Textarea(attrs={
-        'class': 'form-control py-4',
+        'class': 'form-control py-2',
         'rows': 3,
     }), required=False)
 
