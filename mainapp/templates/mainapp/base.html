@@ -46,7 +46,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'auth:profile' %}">
                             <i class="fas fa-shopping-basket"></i>
-                            {{ baskets.first.total_sum }} руб.
+                            {% if not baskets.exists %}
+                                Корзина пуста
+                            {% else %}
+                                {{ baskets.first.total_sum }} руб.
+                            {% endif %}
                         </a>
                     </li>
                     <li class="nav-item">
