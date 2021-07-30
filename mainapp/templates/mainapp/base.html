@@ -42,8 +42,14 @@
 
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <a class="dropdown-item"
-                                   href="{% url 'auth:profile' %}">{{ user.first_name | default:"Пользователь" }}</a>
-                                <a class="dropdown-item" href="{% url 'ordersapp:orders' %}">Заказы</a>
+                                   href="{% url 'auth:profile' %}">
+                                    {{ user.first_name | default:"Пользователь" }}
+                                    <i class="fas fa-user-circle"></i>
+                                </a>
+                                <a class="dropdown-item" href="{% url 'ordersapp:order_list' %}">
+                                    Заказы
+                                    <i class="fas fa-shopping-basket"></i>
+                                </a>
                             </div>
                         </div>
                     </li>
@@ -90,8 +96,8 @@
 <!-- FontAwesome script -->
 <script src="{% static 'vendor/fontawesome/fontawesome-icons.js' %}" crossorigin="anonymous"></script>
 
-{# custom script for basket #}
-<script src="{% static 'js/basket.js' %}"></script>
+{% block custom_js %}
+{% endblock %}
 
 </body>
 </html>

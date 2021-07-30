@@ -1,10 +1,9 @@
 from django.urls import path
 
-from adminapp.views import index, activate_user
-
-from adminapp.views import UsersListView, ProductsListView, ProductCategoriesListView, UserCreateView, \
+from adminapp.views import index, activate_user, UsersListView, ProductsListView, ProductCategoriesListView, \
+    UserCreateView, \
     ProductCreateView, ProductCategoriesCreateView, UserUpdateView, ProductUpdateView, ProductCategoriesUpdateView, \
-    UserDeleteView, ProductDeleteView, ProductCategoryDeleteView
+    UserDeleteView, ProductDeleteView, ProductCategoryDeleteView, OrderListView, OrderUpdateView, OrderDeleteView
 
 app_name = 'authapp'
 
@@ -25,4 +24,8 @@ urlpatterns = [
     path('product-category-create/', ProductCategoriesCreateView.as_view(), name='create_product_category'),
     path('change-product-category/<int:pk>/', ProductCategoriesUpdateView.as_view(), name='change_product_category'),
     path('product-category-delete/<int:pk>/', ProductCategoryDeleteView.as_view(), name='delete_product_category'),
+
+    path('orders/', OrderListView.as_view(), name='orders'),
+    path('change-order/<int:pk>/', OrderUpdateView.as_view(), name='change_order'),
+    path('cancel-order/<int:pk>/', OrderDeleteView.as_view(), name='cancel_order'),
 ]

@@ -2,7 +2,11 @@
 {% load static %}
 
 {% block css %}
-    <link href="{% static 'css/profile.css' %}" rel="stylesheet">
+    <link href="{% static 'css/profile-orders.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'js/basket.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -82,7 +86,8 @@
                     </div>
                     <div class="form-row">
                         <div class="col-lg-6">
-                            <label class="small mb-1" for="{{ editform.username.id_for_label }}">Имя пользователя</label>
+                            <label class="small mb-1" for="{{ editform.username.id_for_label }}">Имя
+                                пользователя</label>
                             {{ editform.username }}
                         </div>
                         <div class="col-lg-6">

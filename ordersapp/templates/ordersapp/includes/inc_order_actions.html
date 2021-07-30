@@ -1,0 +1,11 @@
+<div class="d-flex justify-content-around flex-column flex-lg-row">
+    {% if object.status == 'FM' %}
+        <a class="btn btn-success m-2" href="{% url 'ordersapp:order_forming_complete' object.pk %}">
+            Оформить заказ
+        </a>
+        <a class="btn btn-danger m-2" href="{% url 'ordersapp:order_delete' object.pk %}">Отменить заказ</a>
+    {% endif %}
+    <a class="btn btn-info m-2" href="{% url 'ordersapp:order_list' %}">
+        Мои заказы
+    </a>
+</div>

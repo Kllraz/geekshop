@@ -1,0 +1,71 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'css/profile-orders.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'js/orders_scripts.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="h2 text-center">
+                    Ваши заказы,
+                    {{ user.username|default:'Пользователь' }}
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table text-center">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Создан</th>
+                        <th>Обновлен</th>
+                        <th>Статус</th>
+                        <th colspan="3" align>Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in object_list %}
+                        {% if item.is_active %}
+                            <tr>
+                                <td>{{ item.pk }}</td>
+                                <td>{{ item.created|date:"Y-m-d H:i:s" }}</td>
+                                <td>{{ item.updated|date:"Y-m-d H:i:s" }}</td>
+                                <td>{{ item.get_status_display }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center
+                                    justify-content-around flex-column flex-lg-row">
+                                        <a class="btn btn-info m-2" href="{% url 'ordersapp:order_detail' item.pk %}">
+                                            Посмотреть
+                                        </a>
+                                        {% if item.status == 'FM' %}
+                                            <a class="btn btn-primary m-2"
+                                               href="{% url 'ordersapp:order_update' item.pk %}">
+                                                Редактировать
+                                            </a>
+                                            <a class="btn btn-danger m-2" href="{% url 'ordersapp:order_delete' item.pk %}">
+                                                Отменить
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-success" href="{% url 'ordersapp:order_create' %}">
+                    Новый заказ
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'css/profile-orders.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="h2">Уверены, что хотите удалить?</div>
+            </div>
+            <div class="card-body">
+                {% include 'ordersapp/includes/inc_order_summary.html' %}
+            </div>
+            <div class="card-footer d-flex justify-content-around flex-column flex-lg-row">
+                <form action="{% url 'ordersapp:order_delete' object.pk %}" method="post">
+                    {% csrf_token %}
+                    <input class="btn btn-danger" type="submit" value="Удалить">
+                </form>
+                <a class="btn btn-success" href="{% url 'ordersapp:order_list' %}">Отмена</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
