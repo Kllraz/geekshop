@@ -4,6 +4,8 @@ from mainapp.models import Product, ProductCategory
 
 from django import forms
 
+from ordersapp.models import Order, OrderItem
+
 
 class AdminUserCreationForm(RegisterForm):
     avatar = forms.ImageField(widget=forms.FileInput(attrs={
@@ -110,3 +112,14 @@ class AdminEditProductCategoryForm(forms.ModelForm):
     class Meta:
         model = ProductCategory
         fields = ('name', 'description')
+
+
+class AdminEditOrderForm(forms.ModelForm):
+    status = forms.CharField(max_length=3, widget=forms.Select(choices=Order.ORDER_STATUS_CHOICES,
+                                                               attrs={
+                                                                   'class': 'form-control',
+                                                               }))
+
+    class Meta:
+        model = Order
+        fields = ('status',)

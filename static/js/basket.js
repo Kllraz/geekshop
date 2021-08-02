@@ -18,7 +18,7 @@ window.onload = function () {
         let target = event.target;
 
         $.ajax({
-            url: `/basket/remove_product/${target.getAttribute('data-id')}/`,
+            url: `/basket/remove-product/${target.getAttribute('data-id')}/`,
             success: function (data) {
                 basket.html(data.result);
             }
@@ -31,7 +31,7 @@ window.onload = function () {
         let target = event.target;
 
         $.ajax({
-            url: `/basket/add_product/${target.getAttribute('data-id')}/`,
+            url: `/basket/add-product/${target.getAttribute('data-id')}/`,
         });
     });
 }

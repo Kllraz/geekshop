@@ -1,0 +1,60 @@
+{% extends 'adminapp/base.html' %}
+
+{% block content %}
+    {% if form.errors %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert"
+             style="margin-top: 50px;">
+            {{ form.errors | escape }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+    <h1 class="mt-4">Редактирование заказа №{{ object.id }} |
+        Заказчик {{ object.user.first_name }} {{ object.user.last_name }}</h1>
+    <div class="card-body">
+        <h3 class="mb-4">Товары</h3>
+        <div class="row">
+            {% for orderitem in object.orderitem.select_related %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="#">{{ orderitem.product.name | capfirst }}</a>
+                            </h4>
+                        </div>
+                        <div class="card-footer">
+                            <h5>{{ orderitem.product.price | floatformat:2 }}&nbsp;руб. *
+                            {{ orderitem.quantity }}&nbsp;шт.
+                            = {{ orderitem.get_product_cost }}&nbsp;руб.</h5>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <form action="{% url 'admin-staff:change_order' order.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="small mb-1" for="{{ form.status.id_for_label }}">Статус</label>
+                        {{ form.status }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-lg-12" style="margin-top: 33px;">
+                    <input class="btn btn-info btn-block" type="submit" value="Сохранить">
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-lg-12" style="margin-top: 33px;">
+                <form action="{% url 'admin-staff:cancel_order' order.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Отменить заказ" class="btn btn-danger btn-block">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

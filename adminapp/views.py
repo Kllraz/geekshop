@@ -10,9 +10,11 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from authapp.models import User
-from adminapp.forms import AdminUserCreationForm, AdminUserEditForm, AdminProductEditForm, AdminCreateProductForm, \
-    AdminCreateProductCategoryForm, AdminEditProductCategoryForm
 from mainapp.models import Product, ProductCategory
+from ordersapp.models import Order
+
+from adminapp.forms import AdminUserCreationForm, AdminUserEditForm, AdminProductEditForm, AdminCreateProductForm, \
+    AdminCreateProductCategoryForm, AdminEditProductCategoryForm, AdminEditOrderForm
 
 
 # Create your views here.
@@ -182,3 +184,44 @@ class ProductCategoryDeleteView(DeleteView):
         messages.success(request, self.success_message)
 
         return super(ProductCategoryDeleteView, self).delete(request, *args, **kwargs)
+
+
+class OrderListView(ListView):
+    model = Order
+    template_name = 'adminapp/admin-orders-read.html'
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super(OrderListView, self).dispatch(request, *args, **kwargs)
+
+
+class OrderUpdateView(SuccessMessageMixin, UpdateView):
+    model = Order
+    template_name = 'adminapp/admin-orders-update-delete.html'
+    form_class = AdminEditOrderForm
+    success_url = reverse_lazy('admin-staff:orders')
+    success_message = 'Данные сохранены'
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super(OrderUpdateView, self).dispatch(request, *args, **kwargs)
+
+
+class OrderDeleteView(SuccessMessageMixin, DeleteView):
+    model = Order
+    template_name = 'adminapp/admin-orders-update-delete.html'
+    success_url = reverse_lazy('admin-staff:orders')
+    success_message = 'Заказ отменен'
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super(OrderDeleteView, self).dispatch(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.is_active = False
+        self.object.save()
+        messages.success(request, self.success_message)
+
+        return HttpResponseRedirect(success_url)

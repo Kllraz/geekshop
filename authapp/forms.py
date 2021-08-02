@@ -110,7 +110,7 @@ class ProfileEditForm(forms.ModelForm):
         'rows': 3,
     }), required=False)
 
-    gender = forms.CharField(max_length=2, widget=forms.Select(choices=UserProfile.GENDER_CHOICE,
+    gender = forms.CharField(max_length=1, widget=forms.Select(choices=UserProfile.GENDER_CHOICE,
                                                                attrs={
                                                                    'class': 'form-control',
                                                                }))
