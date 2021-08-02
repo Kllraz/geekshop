@@ -11,7 +11,13 @@
             <div class="h4">Заказчик: {{ user.last_name }} {{ user.first_name }}</div>
             <div class="h4">Статус: {{ object.get_status_display }}</div>
             <div class="h4">
-                Стоимость: <span class="badge badge-secondary">{{ object.get_total_cost }}&nbsp;руб.</span>
+                Стоимость:
+                <span class="badge badge-secondary">
+                    <span class="order_total_cost">
+                        {{ object.get_total_cost }}
+                    </span>
+                    &nbsp;руб.
+                </span>
             </div>
         </div>
     </div>

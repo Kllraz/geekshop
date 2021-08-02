@@ -13,24 +13,26 @@
             </div>
             <div class="card-body">
                 <h3 class="mb-4">Товары</h3>
-                {% for orderitem in object.orderitem.select_related %}
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h4 class="card-title">
-                                    <a href="#">{{ orderitem.product.name | capfirst }}</a>
-                                </h4>
-                            </div>
-                            <div class="card-footer">
-                                <h5>{{ orderitem.product.price | floatformat:2 }}&nbsp;руб. *
-                                    {{ orderitem.quantity }}&nbsp;шт.
-                                    =
-                                    <span class="badge badge-secondary">{{ orderitem.get_product_cost }}&nbsp;руб.</span>
-                                </h5>
+                <div class="row">
+                    {% for orderitem in object.orderitem.select_related %}
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        <a href="#">{{ orderitem.product.name | capfirst }}</a>
+                                    </h4>
+                                </div>
+                                <div class="card-footer">
+                                    <h5>{{ orderitem.product.price | floatformat:2 }}&nbsp;руб. *
+                                        {{ orderitem.quantity }}&nbsp;шт.
+                                        =
+                                        <span class="badge badge-secondary">{{ orderitem.get_product_cost }}&nbsp;руб.</span>
+                                    </h5>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
             <div class="card-footer">
                 {% include 'ordersapp/includes/inc_order_actions.html' %}
