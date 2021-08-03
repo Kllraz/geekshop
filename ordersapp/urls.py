@@ -12,6 +12,6 @@ urlpatterns = [
     path('delete/<int:pk>/', OrderDelete.as_view(), name='order_delete'),
     path('complete/<int:pk>/', order_forming_complete, name='order_forming_complete'),
     path('detail/<int:pk>/', OrderDetail.as_view(), name='order_detail'),
-    path('get-product-price/<int:pk>/', get_product_price, name='get_product_price')
+    path('product/<int:pk>/price/', get_product_price, name='get_product_price')
 
 ]

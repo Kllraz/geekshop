@@ -146,10 +146,14 @@ class OrderDetail(LoginRequiredMixin, DetailView):
 
 def get_product_price(request, pk=None):
     if request.is_ajax():
-        product = Product.objects.get(id=pk)
-        product_price = product.price
+        product = Product.objects.filter(id=pk).first()
 
-        return JsonResponse({'result': product_price})
+        if product:
+            product_price = product.price
+
+            return JsonResponse({'price': product_price})
+        else:
+            return JsonResponse({'price': 0})
 
 
 @receiver(pre_save, sender=OrderItem)
