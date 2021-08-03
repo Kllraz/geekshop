@@ -69,16 +69,7 @@ window.onload = function () {
 
     $('.order_form select').change(function () {
         let target = event.target;
-        orderitem_num = parseInt(target.name.replace('orderitem-', '').replace('-product', ''));
 
-        $.ajax({
-            url: `/orders/get-product-price/${orderitem_num}/`,
-            success: function (data) {
-                let elms = $('td.td3.order.formset_td');
-                elms[elms.length - 1].innerHTML = `<span class='orderitem-${orderitem_num}-price'>${data.result}</span>`;
-                price_arr[orderitem_num] = data.result;
-            }
-        });
     });
 
 }
