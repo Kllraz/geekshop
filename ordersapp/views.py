@@ -91,7 +91,8 @@ class OrderUpdateView(LoginRequiredMixin, UpdateView):
         if self.request.POST:
             formset = order_form_set(self.request.POST, instance=self.object)
         else:
-            formset = order_form_set(instance=self.object)
+            queryset = self.object.orderitems.select_related()
+            formset = order_form_set(instance=self.object, queryset=queryset)
             for form in formset.forms:
                 if form.instance.pk:
                     form.initial['price'] = form.instance.product.price

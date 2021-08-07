@@ -1,3 +1,5 @@
+from django.shortcuts import redirect
+
 from basketapp.models import Basket
 from mainapp.models import Product
 from django.template.loader import render_to_string
@@ -21,6 +23,7 @@ def add_product(request, product_id=None):
             Basket.objects.create(user=request.user, product=product, quantity=1)
 
         return JsonResponse({'status': True})
+    return redirect('index')
 
 
 @login_required
@@ -33,6 +36,7 @@ def remove_product(request, basket_id=None):
         result = render_to_string('basketapp/basket.html', context)
 
         return JsonResponse({'result': result})
+    return redirect('index')
 
 
 @login_required
@@ -50,3 +54,5 @@ def edit(request, basket_id=None, quantity=None):
         result = render_to_string('basketapp/basket.html', context)
 
         return JsonResponse({'result': result})
+
+    return redirect('index')
