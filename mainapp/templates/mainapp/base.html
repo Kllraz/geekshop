@@ -63,7 +63,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'auth:profile' %}">
                             <i class="fas fa-shopping-basket"></i>
-                            {% if not baskets.exists %}
+                            {% if not baskets %}
                                 Корзина пуста
                             {% else %}
                                 {{ baskets.first.total_sum }} руб.
