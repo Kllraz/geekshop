@@ -96,6 +96,11 @@ class ProductsListView(ListView):
     def dispatch(self, request, *args, **kwargs):
         return super(ProductsListView, self).dispatch(request, *args, **kwargs)
 
+    def get_queryset(self):
+        queryset = super(ProductsListView, self).get_queryset()
+        queryset = queryset.select_related('category')
+        return queryset
+
 
 class ProductCreateView(SuccessMessageMixin, CreateView):
     model = Product
@@ -119,6 +124,11 @@ class ProductUpdateView(SuccessMessageMixin, UpdateView):
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, request, *args, **kwargs):
         return super(ProductUpdateView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = super(ProductUpdateView, self).get_queryset()
+        queryset = queryset.select_related('category')
+        return queryset
 
 
 class ProductDeleteView(DeleteView):
@@ -194,6 +204,11 @@ class OrderListView(ListView):
     def dispatch(self, request, *args, **kwargs):
         return super(OrderListView, self).dispatch(request, *args, **kwargs)
 
+    def get_queryset(self):
+        queryset = super(OrderListView, self).get_queryset()
+        queryset = queryset.select_related('user')
+        return queryset
+
 
 class OrderUpdateView(SuccessMessageMixin, UpdateView):
     model = Order
@@ -205,6 +220,11 @@ class OrderUpdateView(SuccessMessageMixin, UpdateView):
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, request, *args, **kwargs):
         return super(OrderUpdateView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = super(OrderUpdateView, self).get_queryset()
+        queryset = queryset.select_related('user')
+        return queryset
 
 
 class OrderDeleteView(SuccessMessageMixin, DeleteView):
