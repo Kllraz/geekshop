@@ -7,15 +7,13 @@
 
 {% block custom_js %}
     <script src="{% static 'js/basket.js' %}"></script>
+    <script src="{% static 'js/nav_script.js' %}"></script>
 {% endblock %}
 
 {% block content %}
     <div class="container">
-
         <div class="row">
-
             <div class="col-lg-3">
-
                 <h1 class="my-4">GeekShop</h1>
                 <div class="list-group">
                     {% for category in products_categories %}
