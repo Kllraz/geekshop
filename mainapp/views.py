@@ -46,7 +46,8 @@ class ProductsListView(ListView):
     def get_queryset(self):
         queryset = super(ProductsListView, self).get_queryset()
         queryset = queryset.filter(
-            category_id=self.kwargs.get('category_id')
+            category_id=self.kwargs.get('category_id'),
+            is_deleted=False
         ) if self.kwargs.get('category_id') else queryset
 
         return queryset

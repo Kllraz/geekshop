@@ -1,3 +1,5 @@
+from django.db import connection
+from django.db.models import F
 from django.shortcuts import redirect
 
 from basketapp.models import Basket
@@ -6,6 +8,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
+from adminapp.views import db_profile_by_type
 
 # Create your views here.
 
@@ -17,8 +20,9 @@ def add_product(request, product_id=None):
 
         if baskets.exists():
             basket = baskets.first()
-            basket.quantity += 1
+            basket.quantity = F('quantity') + 1
             basket.save()
+            db_profile_by_type(Basket, 'UPDATE', connection.queries)
         else:
             Basket.objects.create(user=request.user, product=product, quantity=1)
 

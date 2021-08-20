@@ -25,8 +25,8 @@
                         </div>
                         <div class="card-footer">
                             <h5>{{ orderitem.product.price | floatformat:2 }}&nbsp;руб. *
-                            {{ orderitem.quantity }}&nbsp;шт.
-                            = {{ orderitem.get_product_cost }}&nbsp;руб.</h5>
+                                {{ orderitem.quantity }}&nbsp;шт.
+                                = {{ orderitem.get_product_cost }}&nbsp;руб.</h5>
                         </div>
                     </div>
                 </div>
@@ -48,13 +48,24 @@
                 </div>
             </div>
         </form>
-        <div class="row">
-            <div class="col-lg-12" style="margin-top: 33px;">
-                <form action="{% url 'admin-staff:cancel_order' order.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="Отменить заказ" class="btn btn-danger btn-block">
-                </form>
+        {% if order.is_active %}
+            <div class="row">
+                <div class="col-lg-12" style="margin-top: 33px;">
+                    <form action="{% url 'admin-staff:cancel_order' order.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Отменить заказ" class="btn btn-danger btn-block">
+                    </form>
+                </div>
             </div>
-        </div>
+        {% else %}
+            <div class="row">
+                <div class="col-lg-12" style="margin-top: 33px;">
+                    <a href="{% url 'admin-staff:activate' order.id %}" class="btn btn-success btn-block">
+                        Сделать активным
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
     </div>
 {% endblock %}

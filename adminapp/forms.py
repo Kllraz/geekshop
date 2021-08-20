@@ -91,7 +91,7 @@ class AdminCreateProductCategoryForm(forms.ModelForm):
         'class': 'form-control py-4',
         'placeholder': 'Введите название'
     }))
-    description = forms.CharField(widget=forms.TextInput(attrs={
+    description = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'class': 'form-control py-4',
         'placeholder': 'Введите описание'
     }))
@@ -105,13 +105,19 @@ class AdminEditProductCategoryForm(forms.ModelForm):
     name = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control py-4'
     }))
-    description = forms.CharField(widget=forms.TextInput(attrs={
+    description = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'class': 'form-control py-4'
     }))
 
+    discount = forms.IntegerField(label='скидка', required=False, min_value=0, max_value=90, initial=0,
+                                  widget=forms.NumberInput(attrs={
+                                      'class': 'form-control py-4'
+                                  }))
+
     class Meta:
         model = ProductCategory
-        fields = ('name', 'description')
+        # fields = ('name', 'description', 'discount')
+        exclude = ()
 
 
 class AdminEditOrderForm(forms.ModelForm):

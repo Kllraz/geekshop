@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import transaction
+from django.db import transaction, connection
+from django.db.models import F
 from django.db.models.signals import pre_save, pre_delete
 from django.dispatch import receiver
 from django.forms import inlineformset_factory
@@ -8,6 +9,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
+from adminapp.views import db_profile_by_type
 from basketapp.models import Basket
 from mainapp.models import Product
 from ordersapp.forms import OrderItemForm
@@ -162,15 +164,17 @@ def get_product_price(request, pk=None):
 def product_quantity_update_save(sender, update_fields, instance, **kwargs):
     if update_fields is 'quantity' or 'product':
         if instance.pk:
-            instance.product.quantity -= instance.quantity - \
+            instance.product.quantity -= F("quantity") - \
                                          sender.get_item(instance.pk).quantity
         else:
-            instance.product.quantity -= instance.quantity
+            instance.product.quantity -= F("quantity")
         instance.product.save()
+        db_profile_by_type(sender, 'UPDATE', connection.queries)
 
 
 @receiver(pre_delete, sender=OrderItem)
 @receiver(pre_delete, sender=Basket)
 def product_quantity_update_delete(sender, instance, **kwargs):
-    instance.product.quantity += instance.quantity
+    instance.product.quantity += F("quantity")
     instance.product.save()
+    db_profile_by_type(sender, 'UPDATE', connection.queries)

@@ -1,3 +1,7 @@
+from django.db import connection
+from django.db.models import F
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.shortcuts import render, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -77,6 +81,17 @@ def activate_user(request, user_id):
     messages.success(request, f'Пользователь "{user.username}" активирован')
 
     return redirect('admin-staff:users')
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def activate(request, pk):
+    object = Product.objects.get(id=pk)
+    object.is_deleted = False
+    object.save()
+
+    messages.success(request, f'{object} активирован')
+
+    return redirect('admin-staff:index')
 
 
 class UsersListView(ListView):
@@ -179,6 +194,15 @@ class ProductCategoriesUpdateView(SuccessMessageMixin, UpdateView):
     def dispatch(self, request, *args, **kwargs):
         return super(ProductCategoriesUpdateView, self).dispatch(request, *args, **kwargs)
 
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                self.object.product_set.update(price=F('price') * (1 - discount / 100))
+                db_profile_by_type(self.__class__, 'UPDATE', connection.queries)
+
+        return super(ProductCategoriesUpdateView, self).form_valid(form)
+
 
 class ProductCategoryDeleteView(DeleteView):
     model = ProductCategory
@@ -191,9 +215,13 @@ class ProductCategoryDeleteView(DeleteView):
         return super(ProductCategoryDeleteView, self).dispatch(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.is_active = False
+        self.object.save()
         messages.success(request, self.success_message)
 
-        return super(ProductCategoryDeleteView, self).delete(request, *args, **kwargs)
+        return HttpResponseRedirect(success_url)
 
 
 class OrderListView(ListView):
@@ -245,3 +273,20 @@ class OrderDeleteView(SuccessMessageMixin, DeleteView):
         messages.success(request, self.success_message)
 
         return HttpResponseRedirect(success_url)
+
+
+def db_profile_by_type(prefix, type, queries):
+    update_queries = list(filter(lambda x: type in x['sql'], queries))
+    print(f'db_profile {type} for {prefix}:')
+    [print(query['sql']) for query in update_queries]
+
+
+@receiver(pre_save, sender=ProductCategory)
+def product_is_active_update_productcategory_save(sender, instance, **kwargs):
+    if instance.pk:
+        if instance.is_delete:
+            instance.product_set.update(is_deleted=False)
+        else:
+            instance.product_set.update(is_deleted=True)
+
+        db_profile_by_type(sender, 'UPDATE', connection.queries)

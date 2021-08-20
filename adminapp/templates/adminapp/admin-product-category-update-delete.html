@@ -23,6 +23,12 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
+                        <label class="small mb-1" for="{{ form.discount.id_for_label }}">Скидка</label>
+                        {{ form.discount }}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
                         <label class="small mb-1" for="{{ form.description.id_for_label }}">Описание</label>
                         {{ form.description }}
                     </div>
@@ -34,14 +40,24 @@
                 </div>
             </div>
         </form>
-        <div class="row">
-            <div class="col-lg-12" style="margin-top: 33px;">
-                <form action="{% url 'admin-staff:delete_product_category' productcategory.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="Удалить" class="btn btn-danger btn-block">
-                </form>
+        {% if product.is_deleted %}
+            <div class="row">
+                <div class="col-lg-12" style="margin-top: 33px;">
+                    <a href="{% url 'admin-staff:activate' productcategory.id %}" class="btn btn-success btn-block">
+                        Сделать активным
+                    </a>
+                </div>
             </div>
-        </div>
+        {% else %}
+            <div class="row">
+                <div class="col-lg-12" style="margin-top: 33px;">
+                    <form action="{% url 'admin-staff:delete_product_category' productcategory.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Удалить" class="btn btn-danger btn-block">
+                    </form>
+                </div>
+            </div>
+        {% endif %}
 
     </div>
 {% endblock %}

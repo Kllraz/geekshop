@@ -1,17 +1,17 @@
 $(document).ready(function (){
     $.ajax({
-        url: 'update-nav/',
+        url: '/products/update-nav/',
         success: function (data) {
-            $('nav').html(data.result);
+            $('nav.fixed-top').html(data.result);
         },
     });
 });
 
 $(".add-product").on('click', function (){
     $.ajax({
-        url: 'update-basket/',
+        url: '/products/update-basket/',
         success: function (data) {
-            $('.total_cost').html(data.result);
+            $('.total_cost').html(`${data.result.replace('.', ',')}&nbsp;руб.`);
         },
     });
 })

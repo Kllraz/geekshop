@@ -7,9 +7,14 @@ class ProductCategory(models.Model):
     name = models.CharField(max_length=64, unique=True)
     description = models.TextField(blank=True)
     is_delete = models.BooleanField(default=False)
+    discount = models.PositiveIntegerField(blank=True, default=0)
 
     def __str__(self):
         return self.name
+
+    @staticmethod
+    def get_items():
+        return ProductCategory.objects.filter(is_delete=False).order_by('name', 'discount')
 
     class Meta:
         verbose_name_plural = 'Product Categories'
